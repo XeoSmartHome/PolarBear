@@ -1,10 +1,10 @@
 import React from "react";
-import Glass from "./src/Glass";
-
+import MakeCocktailScreen from "./src/screens/MakeCocktailScreen";
 
 const App = () => {
-  return <Glass />;
+  return (
+      <MakeCocktailScreen/>
+  );
 };
-
 
 export default App;
