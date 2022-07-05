@@ -3,7 +3,6 @@ import Svg, { Line, Path } from "react-native-svg";
 import { Color } from "react-native-svg/lib/typescript/lib/extract/types";
 import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import Gradation from "./Gradation";
-import { Button, View } from "react-native";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const BASE_WIDTH = 600;
@@ -11,10 +10,11 @@ const TOP_WIDTH = 800;
 const HEIGHT = 800;
 
 type LiquidProps = {
-    level: number
+    level: number,
+    color: Color
 }
 
-const Liquid = ({ level }: LiquidProps) => {
+const Liquid = ({ level, color }: LiquidProps) => {
     const fill = useSharedValue(0.1);
 
     useEffect(() => {
@@ -33,12 +33,12 @@ const Liquid = ({ level }: LiquidProps) => {
         <>
             <AnimatedPath
                 animatedProps={animatedProps}
-                fill={"blue"}
+                fill={color}
                 fillOpacity={0.6}
             />
             <AnimatedPath
                 animatedProps={animatedProps2}
-                fill={"blue"}
+                fill={color}
                 fillOpacity={0.75 * 0.6}
             />
         </>
@@ -52,13 +52,14 @@ type Props = {
     strokeWidth?: number,
     color?: Color
     level: number
+    ingredients: any[]
 };
 
-const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, level }: Props) => {
+const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, level, ingredients }: Props) => {
 
     return (
         <Svg height={width} width={width} viewBox={[0, 0, 1000, 1000].join(" ")}>
-            <Liquid level={level}/>
+            <Liquid level={level} color={color}/>
             <Path
                 d={`M 100 100 l ${(TOP_WIDTH - BASE_WIDTH) / 2} ${HEIGHT} c 0 120, ${BASE_WIDTH} 120, ${BASE_WIDTH} 0 l ${(TOP_WIDTH - BASE_WIDTH) / 2} -${HEIGHT} c 0 120, -${TOP_WIDTH} 120, -${TOP_WIDTH} 00`}
                 stroke="black"
@@ -73,10 +74,24 @@ const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1,
                 fill={glassColor}
                 fillOpacity={glassOpacity / 2}
             />
-            <Gradation level={0.4} label={"Apple juice"} glassBottomWidth={BASE_WIDTH}
-                       glassTopWidth={TOP_WIDTH} glassHeight={HEIGHT} checked={level > 0.4} />
-            <Gradation level={0.6} label={"Vodka"} glassBottomWidth={BASE_WIDTH} glassTopWidth={TOP_WIDTH}
-                       glassHeight={HEIGHT} checked={level > 0.6} />
+            {/*<Gradation level={0.4} label={"Apple juice"} glassBottomWidth={BASE_WIDTH}*/}
+            {/*           glassTopWidth={TOP_WIDTH} glassHeight={HEIGHT} checked={level > 0.4} />*/}
+            {/*<Gradation level={0.6} label={"Vodka"} glassBottomWidth={BASE_WIDTH} glassTopWidth={TOP_WIDTH}*/}
+            {/*           glassHeight={HEIGHT} checked={level > 0.6} />*/}
+            {
+                ingredients.map(
+                    (ingredient) =>
+                        <Gradation
+                            key={ingredient?.name}
+                            level={ingredient?.targetLevel || 0}
+                            label={ingredient?.name}
+                            glassTopWidth={TOP_WIDTH}
+                            glassBottomWidth={BASE_WIDTH}
+                            glassHeight={HEIGHT}
+                            checked={false}
+                    />
+                )
+            }
         </Svg>
     );
 };

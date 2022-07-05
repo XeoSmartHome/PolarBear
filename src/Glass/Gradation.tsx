@@ -18,11 +18,11 @@ const Gradation = ({ level, label, glassHeight, glassTopWidth, glassBottomWidth,
     const startX = 100 + (glassTopWidth - glassBottomWidth) / 2 * (1 - level);
     const startY = 100 + glassHeight * (1 - level);
     const width = glassBottomWidth + (glassTopWidth - glassBottomWidth) * level;
+    console.log(level);
 
     const color = useSharedValue<number>(0);
 
     useEffect(() => {
-        console.log(checked ? 1 : 0);
         color.value = withTiming(checked ? 1 : 0, {
             duration: 1000,
             easing: Easing.inOut(Easing.ease)
