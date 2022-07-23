@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Button, Dimensions, StyleSheet, View, Text } from "react-native";
-import Glass from "../Glass";
+import Glass from "../components/Glass";
 
 const ingredients = [
     {

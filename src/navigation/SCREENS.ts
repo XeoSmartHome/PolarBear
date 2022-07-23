@@ -1,0 +1,4 @@
+export enum SCREENS {
+    SCAN_DEVICES = "SCAN_DEVICES",
+    MAKE_COCKTAIL = "MAKE_COCKTAIL"
+}
