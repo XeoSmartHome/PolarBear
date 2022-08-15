@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, LogBox, PermissionsAndroid, Text, View } from "react-native";
-import { BleError, BleManager, Characteristic, Device, ScanCallbackType, Service } from "react-native-ble-plx";
-import { Buffer } from "buffer";
+import React, { useCallback, useEffect } from "react";
+import { LogBox, PermissionsAndroid, View } from "react-native";
+import { Device } from "react-native-ble-plx";
 import BluetoothDevicesList from "./src/components/BluetoothDevicesList";
 import BluetoothManager from "./src/bluetooth/BluetoothManager";
-import { StoreProvider } from "./src/store";
 import RootNavigator from "./src/navigation/RootNavigator";
-import MakeCocktailScreen from "./src/screens/MakeCocktailScreen";
+import { StoreProvider } from "store/StoreProvider";
+import ThemeProvider from "theme/ThemeProvider";
 
 const SERVICE_UUID = "7c7aad84-e96b-46ca-b349-38f59ca42939";
 const CURRENT_MASS_CHARACTERISTIC_UUID = "c41c7ff7-29a8-4d75-967d-d06159093fa1";
@@ -101,9 +100,9 @@ const App1 = () => {
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log(PermissionsAndroid.RESULTS.GRANTED);
-                console.log('You can use');
+                console.log("You can use");
             } else {
-                console.log('permission denied');
+                console.log("permission denied");
             }
         } catch (err) {
             console.warn(err);
@@ -111,7 +110,7 @@ const App1 = () => {
     };
 
     useEffect(() => {
-        console.log("asasdas")
+        console.log("asasdas");
         requestAppPermission();
         BluetoothManager.setOnScanResult(onScanResult);
         BluetoothManager.start();
@@ -131,8 +130,9 @@ const App1 = () => {
 const App = () => {
     return (
         <StoreProvider>
-            {/*<RootNavigator/>*/}
-            <MakeCocktailScreen/>
+            <ThemeProvider>
+                <RootNavigator />
+            </ThemeProvider>
         </StoreProvider>
     );
 };

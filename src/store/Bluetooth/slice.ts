@@ -1,5 +1,5 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Device, State } from "react-native-ble-plx";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { State } from "react-native-ble-plx";
 
 export interface MDevice {
     id: string,
@@ -27,6 +27,4 @@ export const bluetoothSlice = createSlice({
     },
 });
 
-export const bluetoothSelectors = {
-    allDevices: ({ bluetooth }: { bluetooth: BluetoothState }) => bluetooth.devices,
-};
+export const bluetoothReducer = bluetoothSlice.reducer;

@@ -1,18 +1,12 @@
+import React from "react";
 import { configureStore } from "@reduxjs/toolkit";
-import { bluetoothSlice } from "./slices/bluethooth";
-import { Provider } from "react-redux";
-import React, { ReactNode } from "react";
+import { bluetoothReducer } from "./Bluetooth/slice";
 
 export const store = configureStore({
     reducer: {
-        bluetooth: bluetoothSlice.reducer,
+        bluetooth: bluetoothReducer,
     },
 });
 
-
-interface StoreProviderProps {
-    children: ReactNode
-}
-
-export const StoreProvider = ({ children }: StoreProviderProps) =>
-    <Provider store={store} children={children} />;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

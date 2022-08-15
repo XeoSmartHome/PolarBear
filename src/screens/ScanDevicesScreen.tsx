@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import { FlatList, ListRenderItemInfo, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, ListRenderItemInfo, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
-import { bluetoothSelectors } from "../store/slices/bluethooth";
 import { Device } from "react-native-ble-plx";
 import PBText from "../components/PBText";
 import BluetoothManager from "../bluetooth/BluetoothManager";
+import { selectAllDevices } from "store/Bluetooth/selectors";
 
 
 const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
@@ -26,7 +26,7 @@ const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
 };
 
 const ScanDevicesScreen = () => {
-    const devices = useSelector(bluetoothSelectors.allDevices);
+    const devices = useSelector(selectAllDevices);
     console.log("a", devices.length);
 
     return (
