@@ -1,13 +1,21 @@
 export type Ingredient = {
-    name: string
-    photo?: string
-}
+    id: string;
+    label: string;
+    photo?: string;
+};
 
 export type MeasuredIngredient = Ingredient & {
-    quantity: number
-}
+    quantity: number;
+};
+
+export type Tag = {
+    label: string;
+    key: string;
+};
 
 export type Recipe = {
-    name: string,
-    ingredients: MeasuredIngredient[]
-}
+    name: string;
+    description: string,
+    ingredients: MeasuredIngredient[];
+    tags: Tag[];
+};
