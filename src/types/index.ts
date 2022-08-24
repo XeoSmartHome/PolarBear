@@ -14,6 +14,7 @@ export type Tag = {
 };
 
 export type Recipe = {
+    id: string;
     name: string;
     description: string,
     ingredients: MeasuredIngredient[];

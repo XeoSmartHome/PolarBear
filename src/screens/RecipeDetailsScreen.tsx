@@ -4,27 +4,31 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RouteNavigationParams } from "navigation/types";
 import { SCREENS } from "navigation/SCREENS";
-import { Button, Divider, IconButton, List, Text } from "react-native-paper";
+import { Button, IconButton, List, Text } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useScreenHeader } from "navigation/hooks";
-import { Ingredient, MeasuredIngredient } from "types";
+import { MeasuredIngredient } from "types";
 
 interface RecipeIngredientProps {
     ingredient: MeasuredIngredient;
+    navigation: StackNavigationProp<RouteNavigationParams>;
 }
 
-const RecipeIngredient = ({ ingredient }: RecipeIngredientProps) => {
+const RecipeIngredient = ({ ingredient, navigation }: RecipeIngredientProps) => {
+
     const goToIngredientDetails = useCallback(() => {
-        console.log(ingredient);
-    }, [ingredient]);
+        navigation.navigate(SCREENS.INGREDIENT_DETAILS, { ingredient });
+    }, [ingredient, navigation]);
 
     return (
         <List.Item
             key={ingredient.id}
-            title={`${ingredient.label} | ${ingredient.quantity}g`}
+            title={`${ingredient.label} - ${ingredient.quantity}ml`}
+            titleNumberOfLines={1}
+            titleEllipsizeMode={"middle"}
             // description={ingredient.quantity}
-            onPress={goToIngredientDetails}
             left={(props) => <List.Icon icon={"bottle-tonic"} {...props} />}
+            onPress={goToIngredientDetails}
         />
     );
 };
@@ -34,7 +38,7 @@ interface RecipeDetailsScreenProps {
     route: RouteProp<RouteNavigationParams, SCREENS.RECIPE_DETAILS>,
 }
 
-const RecipeDetailsScreen = ({ route: { params: { recipe } } }: RecipeDetailsScreenProps) => {
+const RecipeDetailsScreen = ({ route: { params: { recipe } }, navigation }: RecipeDetailsScreenProps) => {
     const [favorite, setFavorite] = useState(false);
 
     const addOrRemoveFromFavorites = useCallback(() => {
@@ -43,12 +47,20 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } } }: RecipeDetailsScr
 
     useScreenHeader({
         headerTitle: recipe.name,
-        headerRight: (props) => <IconButton icon={favorite ? "star" : "star-outline"} iconColor={favorite ? "yellow": props.tintColor} onPress={addOrRemoveFromFavorites}/>
+        headerRight: (props) => <IconButton icon={favorite ? "star" : "star-outline"}
+                                            iconColor={favorite ? "yellow" : props.tintColor}
+                                            onPress={addOrRemoveFromFavorites} />,
     }, [recipe, addOrRemoveFromFavorites, favorite]);
 
     const startRecipe = useCallback(() => {
 
     }, []);
+
+    const renderIngredient = useCallback((ingredient: MeasuredIngredient) => {
+        return (
+            <RecipeIngredient ingredient={ingredient} navigation={navigation} />
+        );
+    }, [navigation]);
 
     return (
         <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -58,7 +70,7 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } } }: RecipeDetailsScr
             </Text>
             <View style={styles.ingredients}>
                 {
-                    recipe.ingredients.map((ingredient) => <RecipeIngredient ingredient={ingredient} />)
+                    recipe.ingredients.map(renderIngredient)
                 }
             </View>
             <Button mode={"contained"} style={styles.button} onPress={startRecipe} textColor={"white"}>
@@ -70,8 +82,8 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } } }: RecipeDetailsScr
 
 const styles = StyleSheet.create({
     contentContainer: {
-        // flexGrow: 1,
-        // justifyContent: "center",
+        flexGrow: 1,
+        justifyContent: "center",
         padding: 16,
     },
     icon: {
@@ -84,8 +96,8 @@ const styles = StyleSheet.create({
     button: {
         width: "80%",
         alignSelf: "center",
-        marginVertical: 20
-    }
+        marginVertical: 20,
+    },
 });
 
 export default RecipeDetailsScreen;

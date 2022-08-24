@@ -9,22 +9,18 @@ import { StackNavigationProp } from "@react-navigation/stack";
 interface RecipeListItemProps {
     recipe: Recipe;
     navigation: StackNavigationProp<RouteNavigationParams>;
+    addIngredient?: (newIngredient: Ingredient) => void;
 }
 
 interface RecipeTagProps {
     ingredient: Ingredient;
+    addIngredient?: (newIngredient: Ingredient) => void;
 }
 
-const randomPick = (arr: Ingredient[]) => {
-    const shuffled = [...arr].sort(() => 0.5 - Math.random());
-
-    return shuffled.slice(0, Math.floor(Math.random() * (arr.length - 2)) + 2);
-}
-
-const RecipeIngredient = ({ ingredient }: RecipeTagProps) => {
+const RecipeIngredient = ({ ingredient, addIngredient }: RecipeTagProps) => {
     const onPress = useCallback(() => {
-
-    }, []);
+        addIngredient?.(ingredient);
+    }, [addIngredient]);
 
     return (
         <Chip
@@ -38,7 +34,7 @@ const RecipeIngredient = ({ ingredient }: RecipeTagProps) => {
     );
 };
 
-const RecipeListItem = ({ recipe, navigation }: RecipeListItemProps) => {
+const RecipeListItem = ({ recipe, navigation, addIngredient }: RecipeListItemProps) => {
 
     const goToRecipeDetails = useCallback(() => {
         navigation.navigate(SCREENS.RECIPE_DETAILS, { recipe });
@@ -54,8 +50,8 @@ const RecipeListItem = ({ recipe, navigation }: RecipeListItemProps) => {
                     </Text>
                     <View style={styles.ingredients}>
                         {
-                            randomPick(recipe.ingredients).map((ingredient) => (
-                                <RecipeIngredient ingredient={ingredient} />
+                            recipe.ingredients.map((ingredient) => (
+                                <RecipeIngredient ingredient={ingredient} addIngredient={addIngredient}/>
                             ))
                         }
                     </View>
@@ -73,16 +69,15 @@ const styles = StyleSheet.create({
     card: {
         borderRadius: 20,
     },
-    description: {
-    },
+    description: {},
     ingredients: {
         flexDirection: "row",
         flexWrap: "wrap",
-        marginTop: 12
+        marginTop: 12,
     },
     ingredient: {
         marginRight: 12,
-        marginVertical: 4
+        marginVertical: 4,
     },
 });
 
