@@ -3,20 +3,24 @@ import { State } from "react-native-ble-plx";
 
 export interface MDevice {
     id: string,
-    name: string | null
+    name: string | null,
 }
 
 interface BluetoothState {
     status: State;
     devices: MDevice[];
+    isConnected: boolean
+}
+
+const initialState: BluetoothState = {
+    status: State.Unknown,
+    devices: [],
+    isConnected: false,
 }
 
 export const bluetoothSlice = createSlice({
     name: "bluetooth",
-    initialState: {
-        status: State.Unknown,
-        devices: [],
-    },
+    initialState,
     reducers: {
         setStatus: (state: BluetoothState, action: PayloadAction<State>) => {
             state.status = action.payload;

@@ -19,51 +19,60 @@ import { selectRecipes } from "store/Recipes/selectors";
 const RecipesListScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RouteNavigationParams>>();
     const recipes = useSelector(selectRecipes);
-    const [searchValue, setSearchValue] = useState("");
-    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+    // const [searchValue, setSearchValue] = useState("");
+    // const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
     useScreenHeader({
         headerTitle: "Recipes",
     }, []);
 
-    const renderHeader = useCallback(() => {
-        return (
-            <RecipesListHeader onChangeSearchValue={setSearchValue} ingredients={ingredients} />
-        );
-    }, [ingredients]);
-
-    const addIngredient = useCallback((newIngredient: Ingredient) => {
-        setIngredients((oldIngredients) => {
-            const index = oldIngredients.findIndex((i) => i.id === newIngredient.id);
-            if (index !== -1) {
-                oldIngredients.splice(index, 1);
-                return [...oldIngredients];
-            }
-            return [...oldIngredients, newIngredient];
-        });
-    }, []);
+    // const renderHeader = useCallback(() => {
+    //     return (
+    //         <RecipesListHeader onChangeSearchValue={setSearchValue} ingredients={ingredients} />
+    //     );
+    // }, [ingredients]);
+    // const addIngredient = useCallback((newIngredient: Ingredient) => {
+    //     setIngredients((oldIngredients) => {
+    //         const index = oldIngredients.findIndex((i) => i.id === newIngredient.id);
+    //         if (index !== -1) {
+    //             oldIngredients.splice(index, 1);
+    //             return [...oldIngredients];
+    //         }
+    //         return [...oldIngredients, newIngredient];
+    //     });
+    // }, []);
 
     const renderRecipe = useCallback(({ item }: ListRenderItemInfo<Recipe>) => {
         return (
-            <RecipeListItem recipe={item} navigation={navigation} addIngredient={addIngredient} />
+            <RecipeListItem recipe={item} navigation={navigation} />
         );
-    }, [navigation, addIngredient]);
+    }, [navigation]);
 
-    const filteredRecipes = useMemo(() => {
-        return recipes.filter(
-            (recipe) => ingredients.every(
-                (requiredIngredient) => recipe.ingredients.find(
-                    (ingredient) => ingredient.id === requiredIngredient.id,
-                ),
-            ),
-        );
-    }, [recipes, ingredients]);
+    // const filteredRecipes = useMemo(() => {
+    //     return recipes.filter(
+    //         (recipe) => ingredients.every(
+    //             (requiredIngredient) => recipe.ingredients.find(
+    //                 (ingredient) => ingredient.id === requiredIngredient.id,
+    //             ),
+    //         ),
+    //     );
+    // }, [recipes, ingredients]);
 
     return (
-        <FlatList data={filteredRecipes} renderItem={renderRecipe} ListHeaderComponent={renderHeader} />
+        <FlatList
+            data={recipes}
+            renderItem={renderRecipe}
+            keyExtractor={(recipe: Recipe) => recipe.id}
+            contentContainerStyle={styles.contentContainer}
+            // ListHeaderComponent={renderHeader}
+        />
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    contentContainer: {
+        padding: 20,
+    }
+});
 
 export default RecipesListScreen;

@@ -47,6 +47,7 @@ const Liquid = ({ level, color }: LiquidProps) => {
 
 type Props = {
     width: number,
+    glassBorder?: Color,
     glassColor?: Color,
     glassOpacity?: number,
     strokeWidth?: number,
@@ -55,21 +56,21 @@ type Props = {
     ingredients: any[]
 };
 
-const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, level, ingredients }: Props) => {
+const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, level, ingredients, glassBorder = "black" }: Props) => {
 
     return (
         <Svg height={width} width={width} viewBox={[0, 0, 1000, 1000].join(" ")}>
             <Liquid level={level} color={color}/>
             <Path
                 d={`M 100 100 l ${(TOP_WIDTH - BASE_WIDTH) / 2} ${HEIGHT} c 0 120, ${BASE_WIDTH} 120, ${BASE_WIDTH} 0 l ${(TOP_WIDTH - BASE_WIDTH) / 2} -${HEIGHT} c 0 120, -${TOP_WIDTH} 120, -${TOP_WIDTH} 00`}
-                stroke="black"
+                stroke={glassBorder}
                 strokeWidth={strokeWidth}
                 fill={glassColor}
                 fillOpacity={glassOpacity}
             />
             <Path
                 d={`M 100 100 c 0 -120, ${TOP_WIDTH} -120, ${TOP_WIDTH} 0 c 0 120, -${TOP_WIDTH} 120, -${TOP_WIDTH} 0`}
-                stroke="black"
+                stroke={glassBorder}
                 strokeWidth={strokeWidth}
                 fill={glassColor}
                 fillOpacity={glassOpacity / 2}

@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RouteNavigationParams } from "navigation/types";
 import { SCREENS } from "navigation/SCREENS";
-import { Button, IconButton, List, Text } from "react-native-paper";
+import { Button, IconButton, List, Surface, Text } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useScreenHeader } from "navigation/hooks";
 import { MeasuredIngredient } from "types";
@@ -64,18 +64,20 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } }, navigation }: Reci
 
     return (
         <ScrollView contentContainerStyle={styles.contentContainer}>
-            <MaterialCommunityIcons name={"glass-cocktail"} size={200} style={styles.icon} />
-            <Text numberOfLines={3} variant={"bodyMedium"}>
-                {`${"\t"}` + recipe.description}
-            </Text>
-            <View style={styles.ingredients}>
-                {
-                    recipe.ingredients.map(renderIngredient)
-                }
-            </View>
-            <Button mode={"contained"} style={styles.button} onPress={startRecipe} textColor={"white"}>
-                Start recipe
-            </Button>
+            <Surface style={{borderRadius: 20, padding: 12}}>
+                <MaterialCommunityIcons name={"glass-cocktail"} size={200} style={styles.icon} color={"white"} />
+                <Text numberOfLines={3} variant={"bodyMedium"}>
+                    {`${"\t"}` + recipe.description}
+                </Text>
+                <View style={styles.ingredients}>
+                    {
+                        recipe.ingredients.map(renderIngredient)
+                    }
+                </View>
+                <Button mode={"contained"} style={styles.button} onPress={startRecipe} textColor={"white"}>
+                    Start recipe
+                </Button>
+            </Surface>
         </ScrollView>
     );
 };

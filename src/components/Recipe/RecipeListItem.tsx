@@ -51,7 +51,7 @@ const RecipeListItem = ({ recipe, navigation, addIngredient }: RecipeListItemPro
                     <View style={styles.ingredients}>
                         {
                             recipe.ingredients.map((ingredient) => (
-                                <RecipeIngredient ingredient={ingredient} addIngredient={addIngredient}/>
+                                <RecipeIngredient ingredient={ingredient} addIngredient={addIngredient} />
                             ))
                         }
                     </View>
@@ -63,11 +63,11 @@ const RecipeListItem = ({ recipe, navigation, addIngredient }: RecipeListItemPro
 
 const styles = StyleSheet.create({
     touchableOpacity: {
-        marginVertical: 10,
-        marginHorizontal: 20,
+        marginVertical: 10
     },
     card: {
-        borderRadius: 20,
+        borderRadius: 16,
+        padding: 8,
     },
     description: {},
     ingredients: {

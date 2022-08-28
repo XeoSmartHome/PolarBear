@@ -5,6 +5,7 @@ import { Device } from "react-native-ble-plx";
 import PBText from "../components/PBText";
 import BluetoothManager from "../bluetooth/BluetoothManager";
 import { selectAllDevices } from "store/Bluetooth/selectors";
+import { useScreenHeader } from "navigation/hooks";
 
 
 const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
@@ -25,7 +26,11 @@ const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
     );
 };
 
-const ScanDevicesScreen = () => {
+const DevicesListScreen = () => {
+    useScreenHeader({
+        headerTitle: "Devices"
+    })
+
     const devices = useSelector(selectAllDevices);
     console.log("a", devices.length);
 
@@ -58,4 +63,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ScanDevicesScreen;
+export default DevicesListScreen;
