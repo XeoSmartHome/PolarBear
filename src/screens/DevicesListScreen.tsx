@@ -6,9 +6,11 @@ import PBText from "../components/PBText";
 import BluetoothManager from "../bluetooth/BluetoothManager";
 import { selectAllDevices } from "store/Bluetooth/selectors";
 import { useScreenHeader } from "navigation/hooks";
+import { MDevice } from "store/Bluetooth/slice";
+import { Divider, Text } from "react-native-paper";
 
 
-const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
+const DeviceRow = ({ item: device }: ListRenderItemInfo<MDevice>) => {
     const onPress = useCallback(() => {
         console.log("connecting ...")
         BluetoothManager.connectToDevice(device.id);
@@ -16,12 +18,12 @@ const DeviceRow = ({ item: device }: ListRenderItemInfo<Device>) => {
 
     return (
         <TouchableOpacity style={styles.row} onPress={onPress}>
-            <PBText style={styles.deviceName}>
+            <Text style={styles.deviceName}>
                 {device.name}
-            </PBText>
-            <PBText style={styles.deviceMac}>
+            </Text>
+            <Text style={styles.deviceMac}>
                 {device.id}
-            </PBText>
+            </Text>
         </TouchableOpacity>
     );
 };
@@ -32,15 +34,13 @@ const DevicesListScreen = () => {
     })
 
     const devices = useSelector(selectAllDevices);
-    console.log("a", devices.length);
 
     return (
         <FlatList
             data={devices}
-            renderItem={(props: ListRenderItemInfo<Device>) => <DeviceRow {...props} />}
+            renderItem={(props: ListRenderItemInfo<MDevice>) => <DeviceRow {...props} />}
             contentContainerStyle={styles.contentContainer}
-            ItemSeparatorComponent={() => <View
-                style={{ borderBottomWidth: 2, borderBottomColor: "black", flex: 1 }} />}
+            ItemSeparatorComponent={Divider}
         />
     );
 };

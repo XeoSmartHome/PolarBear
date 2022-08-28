@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MeasuredIngredient, Recipe } from "types";
+import { Ingredient, MeasuredIngredient, Recipe } from "types";
 
 enum RecipeStatus {
     NONE,
@@ -11,7 +11,7 @@ type ActiveRecipeState = {
     id: string;
     name: string;
     ingredients: MeasuredIngredient[];
-    currentIngredient?: MeasuredIngredient;
+    currentIngredient?: Ingredient;
     status: RecipeStatus;
 }
 
@@ -26,14 +26,18 @@ const activeRecipeSlice = createSlice({
     name: "device",
     initialState,
     reducers: {
-        startRecipe: (state, action: PayloadAction<Recipe>) => {
+        startRecipeAction: (state, action: PayloadAction<Recipe>) => {
             const { ingredients, name, id } = action.payload;
             state.ingredients = ingredients;
             state.name = name;
             state.id = id;
             state.status = RecipeStatus.STARTED;
         },
+        setCurrentIngredient: (state, action: PayloadAction<Ingredient["id"]>) => {
+            state.currentIngredient = state.ingredients.find((ingredient) => ingredient.id === action.payload);
+        }
     },
 });
 
 export const activeRecipeReducer = activeRecipeSlice.reducer;
+export const {setCurrentIngredient, startRecipeAction} = activeRecipeSlice.actions;

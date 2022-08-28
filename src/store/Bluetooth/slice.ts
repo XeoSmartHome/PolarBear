@@ -22,13 +22,14 @@ export const bluetoothSlice = createSlice({
     name: "bluetooth",
     initialState,
     reducers: {
-        setStatus: (state: BluetoothState, action: PayloadAction<State>) => {
+        setStatusAction: (state: BluetoothState, action: PayloadAction<State>) => {
             state.status = action.payload;
         },
-        setDevices: (state: BluetoothState, action: PayloadAction<MDevice[]>) => {
+        setDevicesAction: (state: BluetoothState, action: PayloadAction<MDevice[]>) => {
             state.devices = action.payload;
         },
     },
 });
 
 export const bluetoothReducer = bluetoothSlice.reducer;
+export const {setDevicesAction, setStatusAction} = bluetoothSlice.actions;

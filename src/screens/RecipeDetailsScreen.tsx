@@ -8,6 +8,7 @@ import { Button, IconButton, List, Surface, Text } from "react-native-paper";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useScreenHeader } from "navigation/hooks";
 import { MeasuredIngredient } from "types";
+import BluetoothManager from "../bluetooth/BluetoothManager";
 
 interface RecipeIngredientProps {
     ingredient: MeasuredIngredient;
@@ -53,8 +54,8 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } }, navigation }: Reci
     }, [recipe, addOrRemoveFromFavorites, favorite]);
 
     const startRecipe = useCallback(() => {
-
-    }, []);
+        BluetoothManager.startRecipe(recipe);
+    }, [recipe]);
 
     const renderIngredient = useCallback((ingredient: MeasuredIngredient) => {
         return (
@@ -64,7 +65,7 @@ const RecipeDetailsScreen = ({ route: { params: { recipe } }, navigation }: Reci
 
     return (
         <ScrollView contentContainerStyle={styles.contentContainer}>
-            <Surface style={{borderRadius: 20, padding: 12}}>
+            <Surface style={{ borderRadius: 20, padding: 12 }}>
                 <MaterialCommunityIcons name={"glass-cocktail"} size={200} style={styles.icon} color={"white"} />
                 <Text numberOfLines={3} variant={"bodyMedium"}>
                     {`${"\t"}` + recipe.description}
