@@ -13,6 +13,7 @@ type ActiveRecipeState = {
     ingredients: MeasuredIngredient[];
     currentIngredient?: Ingredient;
     status: RecipeStatus;
+    mass: number
 }
 
 const initialState: ActiveRecipeState = {
@@ -20,6 +21,7 @@ const initialState: ActiveRecipeState = {
     name: "",
     ingredients: [],
     status: RecipeStatus.NONE,
+    mass: 0.01,
 };
 
 const activeRecipeSlice = createSlice({
@@ -35,9 +37,12 @@ const activeRecipeSlice = createSlice({
         },
         setCurrentIngredient: (state, action: PayloadAction<Ingredient["id"]>) => {
             state.currentIngredient = state.ingredients.find((ingredient) => ingredient.id === action.payload);
+        },
+        setCurrentMassAction: (state, action: PayloadAction<number>) => {
+            state.mass = action.payload
         }
     },
 });
 
 export const activeRecipeReducer = activeRecipeSlice.reducer;
-export const {setCurrentIngredient, startRecipeAction} = activeRecipeSlice.actions;
+export const {setCurrentIngredient, startRecipeAction, setCurrentMassAction} = activeRecipeSlice.actions;

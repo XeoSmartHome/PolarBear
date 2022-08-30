@@ -3,6 +3,8 @@ import Svg, { Line, Path } from "react-native-svg";
 import { Color } from "react-native-svg/lib/typescript/lib/extract/types";
 import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from "react-native-reanimated";
 import Gradation from "./Gradation";
+import { useAppSelector } from "store";
+import { selectCurrentMass } from "store/ActiveRecipe/selectors";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const BASE_WIDTH = 600;
@@ -10,11 +12,13 @@ const TOP_WIDTH = 800;
 const HEIGHT = 800;
 
 type LiquidProps = {
-    level: number,
     color: Color
 }
 
-const Liquid = ({ level, color }: LiquidProps) => {
+const Liquid = ({ color }: LiquidProps) => {
+    const currentMass = useAppSelector(selectCurrentMass);
+    const level = Math.max(0.01, currentMass /50);
+
     const fill = useSharedValue(0.1);
 
     useEffect(() => {
@@ -52,15 +56,14 @@ type Props = {
     glassOpacity?: number,
     strokeWidth?: number,
     color?: Color
-    level: number
     ingredients: any[]
 };
 
-const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, level, ingredients, glassBorder = "black" }: Props) => {
+const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1, strokeWidth = 10, ingredients, glassBorder = "black" }: Props) => {
 
     return (
         <Svg height={width} width={width} viewBox={[0, 0, 1000, 1000].join(" ")}>
-            <Liquid level={level} color={color}/>
+            <Liquid color={color}/>
             <Path
                 d={`M 100 100 l ${(TOP_WIDTH - BASE_WIDTH) / 2} ${HEIGHT} c 0 120, ${BASE_WIDTH} 120, ${BASE_WIDTH} 0 l ${(TOP_WIDTH - BASE_WIDTH) / 2} -${HEIGHT} c 0 120, -${TOP_WIDTH} 120, -${TOP_WIDTH} 00`}
                 stroke={glassBorder}

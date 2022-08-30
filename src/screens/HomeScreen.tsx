@@ -10,8 +10,7 @@ import { RouteProp } from "@react-navigation/native";
 import { useAppSelector } from "store";
 import { selectIsConnected } from "store/Bluetooth/selectors";
 import Glass from "components/Glass";
-import { setCurrentIngredient } from "store/ActiveRecipe/slice";
-import { selectCurrentIngredient } from "store/ActiveRecipe/selectors";
+import { selectCurrentIngredient, selectCurrentMass } from "store/ActiveRecipe/selectors";
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<RouteNavigationParams, SCREENS.HOME>,
@@ -38,7 +37,8 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
             <Text variant={"titleLarge"}>
                 {currentIngredient?.label}
             </Text>
-            <Glass width={Dimensions.get("window").width * 0.9} level={0.5} ingredients={[]} glassBorder={"white"} />
+            <Glass width={Dimensions.get("window").width * 0.9} ingredients={[]}
+                   glassBorder={"white"} />
             <Button mode={"contained"} style={styles.button} onPress={goToRecipesListScreen}>
                 Select recipe
             </Button>
@@ -54,10 +54,10 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 50,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     button: {
-        marginTop: 20,
+        marginTop: 30,
         width: "75%",
     },
 });

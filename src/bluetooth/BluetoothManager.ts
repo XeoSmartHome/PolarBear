@@ -3,10 +3,10 @@ import { MDevice, setDevicesAction } from "store/Bluetooth/slice";
 import { store } from "store";
 import { Recipe } from "types";
 import { Buffer } from "buffer";
-import { setCurrentIngredient, startRecipeAction } from "store/ActiveRecipe/slice";
+import { setCurrentIngredient, setCurrentMassAction, startRecipeAction } from "store/ActiveRecipe/slice";
 
 const SERVICE_UUID = "7c7aad84-e96b-46ca-b349-38f59ca42939";
-const CURRENT_MASS_CHARACTERISTIC_UUID = "c41c7ff7-29a8-4d75-967d-d06159093fa1";
+const CURRENT_MASS_CHARACTERISTIC_UUID = "bdaac4a8-273c-11ed-a261-0242ac120002";
 const CURRENT_INGREDIENT_CHARACTERISTIC_UUID = "8751470e-3db3-42b9-8d57-3276a0305138";
 const RECIPE_CHARACTERISTIC_UUID = "acd319d5-965a-4af8-b559-cfb26c2b5435";
 
@@ -59,12 +59,20 @@ const startRecipe = (recipe: Recipe) => {
             });
         device?.monitorCharacteristicForService(SERVICE_UUID, CURRENT_INGREDIENT_CHARACTERISTIC_UUID, (error, characteristic) => {
             if(error) {
-                console.log(error);
+                console.log("err1", error);
                 return;
             }
             const ingredientId = new Buffer(characteristic?.value || "", "base64").toString();
             console.log("currentIngredientId", ingredientId);
             store.dispatch(setCurrentIngredient(ingredientId));
+        });
+        device?.monitorCharacteristicForService(SERVICE_UUID, CURRENT_MASS_CHARACTERISTIC_UUID, (error, characteristic) =>{
+            if(error) {
+                console.log("err2", error);
+                return;
+            }
+            const mass = new Buffer(characteristic?.value || "", "base64").toString();
+            store.dispatch(setCurrentMassAction(parseInt(mass)));
         });
     });
 };
