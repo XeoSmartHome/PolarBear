@@ -27,11 +27,11 @@ const Liquid = ({ color }: LiquidProps) => {
 
     const animatedProps = useAnimatedProps(() => ({
         d: `M ${100 + 100 * (1 - fill.value)} ${100 + 800 * (1 - fill.value)} l ${100 * fill.value} ${800 * fill.value} c 0 120, 600 120, 600 0 l ${100 * fill.value} -${800 * fill.value} c 0 120, -${600 + 200 * fill.value} 120, -${600 + 200 * fill.value} 0`,
-    }));
+    }), []);
 
     const animatedProps2 = useAnimatedProps(() => ({
         d: `M ${100 + 100 * (1 - fill.value)} ${100 + 800 * (1 - fill.value)} c 0 -120, ${600 + 200 * fill.value} -120, ${600 + 200 * fill.value} 0 c 0 120, -${600 + 200 * fill.value} 120, -${600 + 200 * fill.value} 0`,
-    }));
+    }), []);
 
     return (
         <>
