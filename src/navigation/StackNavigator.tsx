@@ -7,7 +7,7 @@ import RecipesListScreen from "screens/RecipesListScreen";
 import RecipeDetailsScreen from "screens/RecipeDetailsScreen";
 import IngredientDetailsScreen from "screens/IngredientDetailsScreen";
 import HomeScreen from "screens/HomeScreen";
-
+import GlassCustomizationScreen from 'screens/GlassCustomizationScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +20,7 @@ const StackNavigator = () => {
             <Stack.Screen name={SCREENS.SCAN_DEVICES} component={DevicesListScreen} />
             <Stack.Screen name={SCREENS.MAKE_COCKTAIL} component={MakeCocktailScreen} />
             <Stack.Screen name={SCREENS.INGREDIENT_DETAILS} component={IngredientDetailsScreen} />
+            <Stack.Screen name={SCREENS.CUSTOMIZE_GLASS} component={GlassCustomizationScreen} />
         </Stack.Navigator>
     );
 };
