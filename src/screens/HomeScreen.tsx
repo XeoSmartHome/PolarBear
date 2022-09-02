@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useScreenHeader } from 'navigation/hooks';
 import { Button, Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,6 +11,7 @@ import { selectIsConnected } from 'store/Bluetooth/selectors';
 import Glass from 'components/Glass';
 import { selectCurrentIngredient } from 'store/ActiveRecipe/selectors';
 import ScaleSvgV2 from 'components/Svg/ScaleSvgV2';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<RouteNavigationParams, SCREENS.HOME>;
@@ -32,15 +33,21 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
         navigation.navigate(SCREENS.RECIPES_LIST);
     }, [navigation]);
 
+    const goToGlassCustomizationScreenScreen = useCallback(() => {
+        navigation.navigate(SCREENS.CUSTOMIZE_GLASS);
+    }, [navigation]);
+
     return (
         <View style={styles.screen}>
             <Text variant={'titleLarge'}>{currentIngredient?.label}</Text>
-            <Glass
-                width={Dimensions.get('window').width * 0.9}
-                ingredients={[]}
-                glassBorder={'white'}
-            />
-            <ScaleSvgV2/>
+            <TouchableOpacity onPress={goToGlassCustomizationScreenScreen}>
+                <Glass
+                    width={Dimensions.get('window').width * 0.9}
+                    ingredients={[]}
+                    glassBorder={'white'}
+                />
+            </TouchableOpacity>
+            <ScaleSvgV2 />
             <Button
                 mode={'contained'}
                 style={styles.button}
