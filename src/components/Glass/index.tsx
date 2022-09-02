@@ -5,6 +5,7 @@ import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from "
 import Gradation from "./Gradation";
 import { useAppSelector } from "store";
 import { selectCurrentMass } from "store/ActiveRecipe/selectors";
+import LiquidSvg from 'components/Glass/LiquidSvg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const BASE_WIDTH = 600;
@@ -63,7 +64,10 @@ const Index = ({ width, color = "blue", glassColor = "gray", glassOpacity = 0.1,
 
     return (
         <Svg height={width} width={width} viewBox={[0, 0, 1000, 1000].join(" ")}>
-            <Liquid color={color}/>
+            {/*<Liquid color={color}/>*/}
+            <LiquidSvg bottomLevel={0} upperLevel={0.4} color={"red"} isFirst={true}/>
+            <LiquidSvg bottomLevel={0.4} upperLevel={0.6} color={"green"} />
+            {/*<LiquidSvg bottomLevel={0.2} upperLevel={0.8} color={"red"}/>*/}
             <Path
                 d={`M 100 100 l ${(TOP_WIDTH - BASE_WIDTH) / 2} ${HEIGHT} c 0 120, ${BASE_WIDTH} 120, ${BASE_WIDTH} 0 l ${(TOP_WIDTH - BASE_WIDTH) / 2} -${HEIGHT} c 0 120, -${TOP_WIDTH} 120, -${TOP_WIDTH} 00`}
                 stroke={glassBorder}
