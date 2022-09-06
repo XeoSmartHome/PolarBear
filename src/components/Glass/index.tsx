@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import Svg, { Line, Path } from 'react-native-svg';
 import { Color } from 'react-native-svg/lib/typescript/lib/extract/types';
 import Animated, {
@@ -7,10 +7,11 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
-import Gradation from './Gradation';
+import IngredientGradationSvg from './IngredientGradationSvg';
 import { useAppSelector } from 'store';
 import { selectCurrentMass } from 'store/ActiveRecipe/selectors';
 import LiquidSvg from 'components/Glass/LiquidSvg';
+import { Ingredient, MeasuredIngredient } from 'types';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const BASE_WIDTH = 600;
@@ -85,8 +86,11 @@ type Props = {
     glassOpacity?: number;
     strokeWidth?: number;
     color?: Color;
-    ingredients: any[];
+    ingredients: MeasuredIngredient[];
+    currentIngredient?: MeasuredIngredient;
 };
+
+const colors = ["blue", "red", "green", "blue", "yellow"]
 
 const Index = ({
     width,
@@ -96,22 +100,56 @@ const Index = ({
     strokeWidth = 10,
     ingredients,
     glassBorder = 'black',
+    currentIngredient,
 }: Props) => {
+    const currentMass = useAppSelector(selectCurrentMass);
+
+    const Liquids = useMemo(() => {
+        if (!currentIngredient) {
+            return null;
+        }
+
+        return ingredients
+            .slice(0, ingredients.indexOf(currentIngredient) + 1)
+            .map((ingredient, index) => {
+                const bottomLevel = index / (ingredients.length + 1);
+                console.log(currentMass / currentIngredient.quantity);
+                const upperLevel =
+                    bottomLevel +
+                    Math.max(
+                        0,
+                        (currentMass / currentIngredient.quantity) / (ingredients.length + 1),
+                    );
+                return (
+                    <LiquidSvg
+                        key={ingredient.id}
+                        bottomLevel={bottomLevel}
+                        upperLevel={ingredients.indexOf(currentIngredient) === index? upperLevel : (index+1) / (ingredients.length + 1)}
+                        color={colors[index]}
+                    />
+                );
+            });
+    }, [currentMass, currentIngredient, ingredients]);
+
+    const IngredientsGradations = useMemo(() => {
+        return ingredients.map((ingredient, index) => (
+            <IngredientGradationSvg
+                key={ingredient.id}
+                ingredient={ingredient}
+                targetLevel={(index + 1) / (ingredients.length + 1)}
+                glassTopWidth={TOP_WIDTH}
+                glassBottomWidth={BASE_WIDTH}
+                glassHeight={HEIGHT}
+            />
+        ));
+    }, [ingredients, currentIngredient]);
+
     return (
         <Svg
             height={width}
             width={width}
             viewBox={[0, 0, 1000, 1000].join(' ')}>
-            {/*<Liquid color={color}/>*/}
-            <LiquidSvg bottomLevel={0} upperLevel={0.3} color={'orange'} />
-            <LiquidSvg bottomLevel={0.3} upperLevel={0.4} color={'green'} />
-            <LiquidSvg
-                bottomLevel={0.4}
-                upperLevel={0.6}
-                color={'red'}
-                isLast={true}
-            />
-            {/*<LiquidSvg bottomLevel={0.2} upperLevel={0.8} color={"red"}/>*/}
+            {Liquids}
             <Path
                 d={`M 100 100 l ${
                     (TOP_WIDTH - BASE_WIDTH) / 2
@@ -130,21 +168,7 @@ const Index = ({
                 fill={glassColor}
                 fillOpacity={glassOpacity / 2}
             />
-            {/*<Gradation level={0.4} label={"Apple juice"} glassBottomWidth={BASE_WIDTH}*/}
-            {/*           glassTopWidth={TOP_WIDTH} glassHeight={HEIGHT} checked={level > 0.4} />*/}
-            {/*<Gradation level={0.6} label={"Vodka"} glassBottomWidth={BASE_WIDTH} glassTopWidth={TOP_WIDTH}*/}
-            {/*           glassHeight={HEIGHT} checked={level > 0.6} />*/}
-            {ingredients.map(ingredient => (
-                <Gradation
-                    key={ingredient?.name}
-                    level={ingredient?.targetLevel || 0}
-                    label={ingredient?.name}
-                    glassTopWidth={TOP_WIDTH}
-                    glassBottomWidth={BASE_WIDTH}
-                    glassHeight={HEIGHT}
-                    checked={false}
-                />
-            ))}
+            {IngredientsGradations}
         </Svg>
     );
 };

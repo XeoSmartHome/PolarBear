@@ -9,9 +9,13 @@ import { RouteProp } from '@react-navigation/native';
 import { useAppSelector } from 'store';
 import { selectIsConnected } from 'store/Bluetooth/selectors';
 import Glass from 'components/Glass';
-import { selectCurrentIngredient } from 'store/ActiveRecipe/selectors';
-import ScaleSvgV2 from 'components/Svg/ScaleSvgV2';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+    selectActiveRecipeIngredients,
+    selectCurrentIngredient,
+} from 'store/ActiveRecipe/selectors';
+import { MeasuredIngredient } from 'types';
+// import ScaleSvgV2 from 'components/Svg/ScaleSvgV2';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<RouteNavigationParams, SCREENS.HOME>;
@@ -22,8 +26,8 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
     useScreenHeader({
         header: () => null,
     });
-    const deviceIsConnected = useAppSelector(selectIsConnected);
     const currentIngredient = useAppSelector(selectCurrentIngredient);
+    const ingredients = useAppSelector(selectActiveRecipeIngredients);
 
     const goToDevicesScreen = useCallback(() => {
         navigation.navigate(SCREENS.SCAN_DEVICES);
@@ -39,15 +43,16 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
 
     return (
         <View style={styles.screen}>
-            <Text variant={'titleLarge'}>{currentIngredient?.label}</Text>
-            <TouchableOpacity onPress={goToGlassCustomizationScreenScreen}>
+            <Text>{currentIngredient?.label}</Text>
+            <TouchableOpacity onLongPress={goToGlassCustomizationScreenScreen}>
                 <Glass
-                    width={Dimensions.get('window').width * 0.9}
-                    ingredients={[]}
+                    width={Dimensions.get('window').width}
+                    ingredients={ingredients}
+                    currentIngredient={currentIngredient as MeasuredIngredient}
                     glassBorder={'white'}
                 />
             </TouchableOpacity>
-            <ScaleSvgV2 />
+            {/*<ScaleSvgV2 />*/}
             <Button
                 mode={'contained'}
                 style={styles.button}
@@ -55,7 +60,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
                 Select recipe
             </Button>
             <Button
-                mode={'elevated'}
+                mode={'outlined'}
                 style={styles.button}
                 onPress={goToDevicesScreen}>
                 Connect device
