@@ -28,8 +28,11 @@ export const bluetoothSlice = createSlice({
         setDevicesAction: (state: BluetoothState, action: PayloadAction<MDevice[]>) => {
             state.devices = action.payload;
         },
+        deviceConnectedAction: (state) => {
+            state.isConnected = true;
+        }
     },
 });
 
 export const bluetoothReducer = bluetoothSlice.reducer;
-export const {setDevicesAction, setStatusAction} = bluetoothSlice.actions;
+export const {setDevicesAction, setStatusAction, deviceConnectedAction} = bluetoothSlice.actions;

@@ -136,9 +136,9 @@ const App = () => {
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 console.log(PermissionsAndroid.RESULTS.GRANTED);
-                console.log("You can use");
+                // console.log("You can use");
             } else {
-                console.log("permission denied");
+                // console.log("permission denied");
             }
         } catch (err) {
             console.warn(err);
