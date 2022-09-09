@@ -24,7 +24,6 @@ const RecipeIngredient = ({ ingredient, addIngredient }: RecipeTagProps) => {
 
     return (
         <Chip
-            key={ingredient.id}
             mode={"outlined"}
             onPress={onPress}
             style={styles.ingredient}
@@ -51,7 +50,7 @@ const RecipeListItem = ({ recipe, navigation, addIngredient }: RecipeListItemPro
                     <View style={styles.ingredients}>
                         {
                             recipe.ingredients.map((ingredient) => (
-                                <RecipeIngredient ingredient={ingredient} addIngredient={addIngredient} />
+                                <RecipeIngredient key={ingredient.id} ingredient={ingredient} addIngredient={addIngredient} />
                             ))
                         }
                     </View>

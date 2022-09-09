@@ -3,7 +3,6 @@ import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { State } from 'react-native-ble-plx';
 import { selectAllDevices, selectIsConnected } from 'store/Bluetooth/selectors';
-import { useScreenHeader } from 'navigation/hooks';
 import { MDevice } from 'store/Bluetooth/slice';
 import { Divider } from 'react-native-paper';
 import { useBluetoothState } from 'bluetooth/utils';
@@ -12,10 +11,6 @@ import DeviceListItem from 'components/Devices/DeviceListItem';
 import { useAppSelector } from 'store';
 
 const DevicesListScreen = () => {
-    useScreenHeader({
-        headerTitle: 'Devices',
-    });
-
     const devices = useSelector(selectAllDevices);
     const bluetoothState = useBluetoothState();
 

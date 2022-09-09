@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { DarkTheme as PaperDefaultTheme, Provider } from "react-native-paper";
+import { MD3DarkTheme as PaperDefaultTheme, Provider } from "react-native-paper";
 import { DarkTheme as NavigationDefaultTheme } from "@react-navigation/native";
 import merge from "deepmerge";
 

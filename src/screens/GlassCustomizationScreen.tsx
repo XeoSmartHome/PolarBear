@@ -8,7 +8,7 @@ const GlassCustomizationScreen = () => {
         <ScrollView>
             <View>
                 <Glass
-                    dimensions={{ height: 800, topWidth: 800, bottomWidth: 600, padding: 100 }}
+                    dimensions={{ height: 800, topWidth: 800, bottomWidth: 600, padding: 100, roundness: 50 }}
                     width={Dimensions.get('window').width * 0.9}
                     ingredients={[]}
                     glassBorder={'white'}

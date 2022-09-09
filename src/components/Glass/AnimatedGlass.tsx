@@ -8,7 +8,6 @@ import LiquidSvg from 'components/Glass/LiquidSvg';
 import { MeasuredIngredient } from 'types';
 import { GlassDimensions } from 'components/Glass/dimensions';
 
-
 type Props = {
     width: number;
     glassBorder?: Color;
@@ -76,6 +75,19 @@ const AnimatedGlass = ({
     const GlassPaths = useMemo(() => {
         return (
             <>
+                <Path
+                    d={`M ${
+                        dimensions.padding +
+                        (dimensions.topWidth - dimensions.bottomWidth) / 2
+                    } ${
+                        dimensions.padding + dimensions.height
+                    } c 0 ${-dimensions.roundness} ${
+                        dimensions.bottomWidth
+                    } ${-dimensions.roundness} ${dimensions.bottomWidth} 0`}
+                    stroke={glassBorder}
+                    strokeWidth={strokeWidth}
+                    opacity={0.5}
+                />
                 <Path
                     d={`M ${dimensions.padding} ${dimensions.padding} l ${
                         (dimensions.topWidth - dimensions.bottomWidth) / 2
