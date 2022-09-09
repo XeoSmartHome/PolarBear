@@ -1,13 +1,14 @@
 import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { Tabs, TabScreen } from 'react-native-paper-tabs';
-import Glass from 'components/Glass';
+import Glass from 'components/Glass/AnimatedGlass';
 
 const GlassCustomizationScreen = () => {
     return (
         <ScrollView>
             <View>
                 <Glass
+                    dimensions={{ height: 800, topWidth: 800, bottomWidth: 600, padding: 100 }}
                     width={Dimensions.get('window').width * 0.9}
                     ingredients={[]}
                     glassBorder={'white'}
