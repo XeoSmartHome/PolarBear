@@ -5,6 +5,7 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
+import { GlassDimensions } from 'components/Glass/dimensions';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -13,98 +14,106 @@ interface LiquidSvgProps {
     upperLevel: number;
     color: string;
     isLast?: boolean;
+    dimensions: GlassDimensions;
 }
-
-const GLASS_X = 100;
-const GLASS_Y = 100;
-const BASE_WIDTH = 600;
-const TOP_WIDTH = 800;
-const HEIGHT = 800;
-const CURVATURE = 120;
 
 const LiquidSvg = ({
     bottomLevel,
     upperLevel,
     color,
     isLast,
+    dimensions,
 }: LiquidSvgProps) => {
     const _upperLevel = useSharedValue(upperLevel);
 
     useEffect(() => {
-        _upperLevel.value = withTiming(upperLevel, { duration: 500 });
+        _upperLevel.value = withTiming(upperLevel, { duration: 300 });
     }, [upperLevel]);
 
     const liquidPath = useAnimatedProps(() => {
         const upLeft = {
-            x: ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - _upperLevel.value),
-            y: HEIGHT * (1 - _upperLevel.value),
+            x:
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                (1 - _upperLevel.value),
+            y: dimensions.height * (1 - _upperLevel.value),
         };
         const downLeft = {
-            x: ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - bottomLevel),
-            y: HEIGHT * (1 - bottomLevel),
+            x:
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                (1 - bottomLevel),
+            y: dimensions.height * (1 - bottomLevel),
         };
         const downRight = {
-            x: TOP_WIDTH - ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - bottomLevel),
-            y: HEIGHT * (1 - bottomLevel),
+            x:
+                dimensions.topWidth -
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                    (1 - bottomLevel),
+            y: dimensions.height * (1 - bottomLevel),
         };
         const upRight = {
             x:
-                TOP_WIDTH -
-                ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - _upperLevel.value),
-            y: HEIGHT * (1 - _upperLevel.value),
+                dimensions.topWidth -
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                    (1 - _upperLevel.value),
+            y: dimensions.height * (1 - _upperLevel.value),
         };
         return {
             d: `M ${upLeft.x} ${upLeft.y} 
             L ${downLeft.x} ${downLeft.y} 
-            C ${downLeft.x} ${downLeft.y + CURVATURE} ${downRight.x} ${
-                downRight.y + CURVATURE
-            } ${downRight.x} ${downRight.y} 
+            C ${downLeft.x} ${downLeft.y + dimensions.roundness} ${
+                downRight.x
+            } ${downRight.y + dimensions.roundness} ${downRight.x} ${
+                downRight.y
+            } 
             L ${upRight.x} ${upRight.y} 
-            C ${upRight.x} ${upRight.y + CURVATURE} ${upLeft.x} ${
-                upLeft.y + CURVATURE
+            C ${upRight.x} ${upRight.y + dimensions.roundness} ${upLeft.x} ${
+                upLeft.y + dimensions.roundness
             } ${upLeft.x} ${upLeft.y}`,
         };
-    }, []);
+    }, [dimensions]);
 
     const liquidSurfacePath = useAnimatedProps(() => {
         const upLeft = {
-            x: ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - _upperLevel.value),
-            y: HEIGHT * (1 - _upperLevel.value),
+            x:
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                (1 - _upperLevel.value),
+            y: dimensions.height * (1 - _upperLevel.value),
         };
         const upRight = {
             x:
-                TOP_WIDTH -
-                ((TOP_WIDTH - BASE_WIDTH) / 2) * (1 - _upperLevel.value),
-            y: HEIGHT * (1 - _upperLevel.value),
+                dimensions.topWidth -
+                ((dimensions.topWidth - dimensions.bottomWidth) / 2) *
+                    (1 - _upperLevel.value),
+            y: dimensions.height * (1 - _upperLevel.value),
         };
 
         return {
             d: `M ${upLeft.x} ${upLeft.y} 
-            C ${upLeft.x} ${upLeft.y + CURVATURE} ${upRight.x} ${
-                upRight.y + CURVATURE
+            C ${upLeft.x} ${upLeft.y + dimensions.roundness} ${upRight.x} ${
+                upRight.y + dimensions.roundness
             } ${upRight.x} ${upRight.y} 
-            C ${upRight.x} ${upRight.y - CURVATURE} ${upLeft.x} ${
-                upLeft.y - CURVATURE
+            C ${upRight.x} ${upRight.y - dimensions.roundness} ${upLeft.x} ${
+                upLeft.y - dimensions.roundness
             } ${upLeft.x} ${upLeft.y}`,
         };
-    }, []);
+    }, [dimensions]);
 
     return (
         <>
             <AnimatedPath
-                x={GLASS_X}
-                y={GLASS_Y}
+                x={dimensions.padding}
+                y={dimensions.padding}
                 animatedProps={liquidPath}
                 fill={color}
-                fillOpacity={0.9}
+                fillOpacity={0.5}
             />
             {isLast && (
                 <AnimatedPath
-                    x={GLASS_X}
-                    y={GLASS_Y}
+                    x={dimensions.padding}
+                    y={dimensions.padding}
                     animatedProps={liquidSurfacePath}
                     fill={color}
-                    fillOpacity={1}
+                    fillOpacity={0.6}
                 />
             )}
         </>

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { useScreenHeader } from 'navigation/hooks';
 import { Button, Text } from 'react-native-paper';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -7,15 +7,13 @@ import { RouteNavigationParams } from 'navigation/types';
 import { SCREENS } from 'navigation/SCREENS';
 import { RouteProp } from '@react-navigation/native';
 import { useAppSelector } from 'store';
-import { selectIsConnected } from 'store/Bluetooth/selectors';
-import Glass from 'components/Glass';
+import Glass from 'components/Glass/AnimatedGlass';
 import {
     selectActiveRecipeIngredients,
     selectCurrentIngredient,
 } from 'store/ActiveRecipe/selectors';
 import { MeasuredIngredient } from 'types';
-// import ScaleSvgV2 from 'components/Svg/ScaleSvgV2';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
+
 
 interface HomeScreenProps {
     navigation: StackNavigationProp<RouteNavigationParams, SCREENS.HOME>;
@@ -41,12 +39,15 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
         navigation.navigate(SCREENS.CUSTOMIZE_GLASS);
     }, [navigation]);
 
+    const {width, height} = useWindowDimensions();
+
     return (
         <View style={styles.screen}>
             <Text>{currentIngredient?.label}</Text>
             <TouchableOpacity onLongPress={goToGlassCustomizationScreenScreen}>
                 <Glass
-                    width={Dimensions.get('window').width}
+                    dimensions={{ height: height * 0.66, topWidth: width, bottomWidth: width * 0.8, padding: 100, roundness: 60 }}
+                    width={width}
                     ingredients={ingredients}
                     currentIngredient={currentIngredient as MeasuredIngredient}
                     glassBorder={'white'}
@@ -72,7 +73,6 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        paddingTop: 50,
         justifyContent: 'center',
         alignItems: 'center',
     },
