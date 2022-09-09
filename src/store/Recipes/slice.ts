@@ -59,7 +59,7 @@ const initialState: RecipesSliceState = {
                     quantity: 37
                 },
                 {
-                    id: " triple-sec-1",
+                    id: "triple-sec-1",
                     label: " Triple Sec",
                     quantity: 12
                 },
