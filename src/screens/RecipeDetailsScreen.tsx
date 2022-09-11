@@ -9,6 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useScreenHeader } from 'navigation/hooks';
 import { MeasuredIngredient } from 'types';
 import BluetoothManager from '../bluetooth/BluetoothManager';
+import { jumpTo } from 'store/BottomTabNavigator/slice';
+import { useDispatch } from 'react-redux';
 
 interface RecipeIngredientProps {
     ingredient: MeasuredIngredient;
@@ -62,7 +64,7 @@ const RecipeDetailsScreen = ({
             headerRight: props => (
                 <IconButton
                     icon={favorite ? 'star' : 'star-outline'}
-                    color={favorite ? 'yellow' : props.tintColor}
+                    // color={favorite ? 'yellow' : props.tintColor}
                     onPress={addOrRemoveFromFavorites}
                 />
             ),
@@ -70,9 +72,11 @@ const RecipeDetailsScreen = ({
         [recipe, addOrRemoveFromFavorites, favorite],
     );
 
+    const dispatch = useDispatch();
+
     const startRecipe = useCallback(() => {
         BluetoothManager.startRecipe(recipe);
-        navigation.popToTop();
+        dispatch(jumpTo(2));
     }, [recipe]);
 
     const renderIngredient = useCallback(
