@@ -21,7 +21,6 @@ const GlassScreen = ({}: GlassScreenProps) => {
 
     return (
         <View style={styles.screen}>
-            <Text>{currentIngredient?.label}</Text>
             <Glass
                 dimensions={{
                     height: height * 0.7,

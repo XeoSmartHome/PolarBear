@@ -7,6 +7,7 @@ import { selectCurrentMass } from 'store/ActiveRecipe/selectors';
 import LiquidSvg from 'components/Glass/LiquidSvg';
 import { MeasuredIngredient } from 'types';
 import { GlassDimensions } from 'components/Glass/dimensions';
+import DynamicLiquidSvg from 'components/Glass/DynamicLiquidSvg';
 
 type Props = {
     width: number;
@@ -20,7 +21,7 @@ type Props = {
     dimensions: GlassDimensions;
 };
 
-const colors = ['blue', 'red', 'green', 'orange', 'yellow'];
+const colors = ['orange', 'purple', 'green', 'blue', 'yellow'];
 
 const AnimatedGlass = ({
     width,
@@ -33,61 +34,67 @@ const AnimatedGlass = ({
     currentIngredient,
     dimensions,
 }: Props) => {
-    const currentMass = useAppSelector(selectCurrentMass);
-
-    const Liquids = useMemo(() => {
+    const DynamicLiquid = useMemo(() => {
         if (!currentIngredient) {
             return null;
         }
+        const currentIngredientIndex = ingredients.indexOf(currentIngredient);
+        console.log('rendering dynamic ingredient');
+        return (
+            <DynamicLiquidSvg
+                index={currentIngredientIndex}
+                ingredientsNumber={ingredients.length}
+                ingredient={currentIngredient}
+                color={colors[currentIngredientIndex]}
+                dimensions={dimensions}
+            />
+        );
+    }, [dimensions, ingredients, currentIngredient]);
 
-        return ingredients
-            .slice(0, ingredients.indexOf(currentIngredient) + 1)
-            .map((ingredient, index) => {
-                const bottomLevel = index / (ingredients.length + 1);
-                console.log(currentMass / currentIngredient.quantity);
-                const upperLevel =
-                    bottomLevel +
-                    Math.max(
-                        0,
-                        currentMass /
-                            currentIngredient.quantity /
-                            (ingredients.length + 1),
-                    );
-                return (
-                    <LiquidSvg
-                        key={ingredient.id}
-                        bottomLevel={bottomLevel}
-                        upperLevel={
-                            ingredients.indexOf(currentIngredient) === index
-                                ? upperLevel
-                                : (index + 1) / (ingredients.length + 1)
-                        }
-                        color={colors[index]}
-                        dimensions={dimensions}
-                        isLast={
-                            index === ingredients.indexOf(currentIngredient)
-                        }
-                    />
-                );
-            });
-    }, [currentMass, currentIngredient, ingredients, dimensions]);
+    const StaticLiquids = useMemo(() => {
+        if (!currentIngredient) {
+            return null;
+        }
+        const staticIngredients = ingredients.slice(
+            0,
+            ingredients.indexOf(currentIngredient),
+        );
+        return staticIngredients.map((ingredient, index) => {
+            const bottomLevel = index / (ingredients.length + 1);
+            const upperLevel = (index + 1) / (ingredients.length + 1);
+            return (
+                <LiquidSvg
+                    key={ingredient.id}
+                    bottomLevel={bottomLevel}
+                    upperLevel={upperLevel}
+                    color={colors[index]}
+                    dimensions={dimensions}
+                />
+            );
+        });
+    }, [ingredients, currentIngredient, dimensions]);
 
-    const GlassPaths = useMemo(() => {
+    const GlassBackPaths = useMemo(() => {
+        return (
+            <Path
+                d={`M ${
+                    dimensions.padding +
+                    (dimensions.topWidth - dimensions.bottomWidth) / 2
+                } ${
+                    dimensions.padding + dimensions.height
+                } c 0 ${-dimensions.roundness} ${
+                    dimensions.bottomWidth
+                } ${-dimensions.roundness} ${dimensions.bottomWidth} 0`}
+                stroke={glassBorder}
+                strokeWidth={strokeWidth}
+                opacity={0.25}
+            />
+        );
+    }, [dimensions]);
+
+    const GlassFrontPaths = useMemo(() => {
         return (
             <>
-                <Path
-                    d={`M ${
-                        dimensions.padding +
-                        (dimensions.topWidth - dimensions.bottomWidth) / 2
-                    } ${
-                        dimensions.padding + dimensions.height
-                    } c 0 ${-dimensions.roundness} ${
-                        dimensions.bottomWidth
-                    } ${-dimensions.roundness} ${dimensions.bottomWidth} 0`}
-                    stroke={glassBorder}
-                    strokeWidth={strokeWidth}
-                    opacity={0.5}
-                />
                 <Path
                     d={`M ${dimensions.padding} ${dimensions.padding} l ${
                         (dimensions.topWidth - dimensions.bottomWidth) / 2
@@ -136,9 +143,11 @@ const AnimatedGlass = ({
             width={width}
             height={aspectRatio * width}
             viewBox={[0, 0, totalWidth, totalHeight].join(' ')}>
-            {Liquids}
-            {GlassPaths}
+            {GlassBackPaths}
+            {StaticLiquids}
+            {DynamicLiquid}
             {IngredientsGradations}
+            {GlassFrontPaths}
         </Svg>
     );
 };

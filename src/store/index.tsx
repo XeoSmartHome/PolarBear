@@ -5,6 +5,7 @@ import { recipesReducer } from "store/Recipes/slice";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { activeRecipeReducer } from "store/ActiveRecipe/slice";
 import { glassSettingsReducer } from 'store/GlassSettings/slice';
+import { bottomTabNavigatorReducer } from 'store/BottomTabNavigator/slice';
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         recipe: recipesReducer,
         activeRecipe: activeRecipeReducer,
         glassSettings: glassSettingsReducer,
+        bottomTabNavigator: bottomTabNavigatorReducer,
     },
 });
 
