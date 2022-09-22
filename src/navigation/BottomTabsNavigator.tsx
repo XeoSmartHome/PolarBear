@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import { SCREENS } from 'navigation/SCREENS';
 import GlassScreen from 'screens/GlassScreen';
@@ -8,6 +8,7 @@ import { useAppSelector } from 'store';
 import { selectCurrentTabIndex } from 'store/BottomTabNavigator/selectors';
 import { useDispatch } from 'react-redux';
 import { jumpTo } from 'store/BottomTabNavigator/slice';
+import SettingsNavigator from 'navigation/SettingsNavigator';
 
 const WipRoute = () => <Text>WIP</Text>;
 
@@ -27,7 +28,7 @@ const BottomTabsNavigator = () => {
         { key: SCREENS.GLASS, title: 'Glass', focusedIcon: 'glass-cocktail' },
         { key: SCREENS.DEVICES, title: 'Devices', focusedIcon: 'scale' },
         {
-            key: 'settings',
+            key: SCREENS.SETTINGS,
             title: 'Settings',
             focusedIcon: 'cog',
             unfocusedIcon: 'cog-outline',
@@ -46,7 +47,7 @@ const BottomTabsNavigator = () => {
         [SCREENS.RECIPES_LIST]: RecipesNavigator,
         favorites: WipRoute,
         [SCREENS.DEVICES]: DevicesListScreen,
-        settings: WipRoute,
+        [SCREENS.SETTINGS]: SettingsNavigator,
     });
 
     return (
