@@ -1,7 +1,7 @@
 import { Recipe } from 'types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type CustomRecipesState = {
+export type CustomRecipesState = {
     recipes: Recipe[];
     isLoading: boolean;
 };
@@ -32,3 +32,4 @@ const customRecipesSlice = createSlice({
 });
 
 export const customRecipesReducer = customRecipesSlice.reducer;
+export const customRecipesActions = customRecipesSlice.actions;

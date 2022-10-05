@@ -3,14 +3,9 @@ import { BottomNavigation, Text } from 'react-native-paper';
 import { SCREENS } from 'navigation/SCREENS';
 import GlassScreen from 'screens/GlassScreen';
 import DevicesListScreen from 'screens/DevicesListScreen';
-import { useAppSelector } from 'store';
-import { selectCurrentTabIndex } from 'store/BottomTabNavigator/selectors';
-import { useDispatch } from 'react-redux';
-import { jumpTo } from 'store/BottomTabNavigator/slice';
 import RecipesListScreen from 'screens/RecipesListScreen';
-import RecipeEditorScreen from 'screens/RecipeEditorScreen';
 import SettingsScreen from 'store/Settings/SettingsScreen';
-
+import CustomRecipesScreen from 'screens/CustomRecipesScreen';
 
 const BottomTabsNavigator = () => {
     const [routes] = useState([
@@ -35,17 +30,12 @@ const BottomTabsNavigator = () => {
         },
     ]);
 
-    const index = useAppSelector(selectCurrentTabIndex);
-    const dispatch = useDispatch();
-
-    const setIndex = useCallback((idx: number) => {
-        dispatch(jumpTo(idx));
-    }, []);
+    const [index, setIndex] = useState(0);
 
     const renderScene = BottomNavigation.SceneMap({
         [SCREENS.GLASS]: GlassScreen,
         [SCREENS.RECIPES_LIST_ROOT]: RecipesListScreen,
-        [SCREENS.CUSTOM_RECIPES_ROOT]: RecipeEditorScreen,
+        [SCREENS.CUSTOM_RECIPES_ROOT]: CustomRecipesScreen,
         [SCREENS.DEVICES]: DevicesListScreen,
         [SCREENS.SETTINGS_ROOT]: SettingsScreen,
     });

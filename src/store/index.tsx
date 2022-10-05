@@ -7,8 +7,9 @@ import { activeRecipeReducer } from "store/ActiveRecipe/slice";
 import { glassSettingsReducer } from 'store/GlassSettings/slice';
 import { bottomTabNavigatorReducer } from 'store/BottomTabNavigator/slice';
 import { customRecipesReducer } from 'store/CustomRecipes/slice';
-import { persistReducer, PersistConfig, persistStore } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
 
 const customRecipesPersistorConfig = {
     key: "customRecipes",
@@ -22,8 +23,15 @@ export const store = configureStore({
         activeRecipe: activeRecipeReducer,
         glassSettings: glassSettingsReducer,
         bottomTabNavigator: bottomTabNavigatorReducer,
+        // @ts-ignore
         customRecipes: persistReducer(customRecipesPersistorConfig, customRecipesReducer),
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
 });
 
 export const persistor = persistStore(store);
