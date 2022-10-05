@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Text } from 'react-native-paper';
 import { useAppSelector } from 'store';
 import Glass from 'components/Glass/AnimatedGlass';
 import {

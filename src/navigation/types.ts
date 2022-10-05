@@ -12,4 +12,10 @@ export type RouteNavigationParams = {
         ingredient: MeasuredIngredient;
     };
     [SCREENS.CUSTOMIZE_GLASS]: undefined;
+    [SCREENS.RECIPE_EDITOR]: {
+        scope: 'edit',
+        recipe: Recipe,
+    } | {
+        scope: 'new'
+    }
 };
