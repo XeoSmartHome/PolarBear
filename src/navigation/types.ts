@@ -13,10 +13,16 @@ export type RouteNavigationParams = {
     };
     [SCREENS.CUSTOMIZE_GLASS]: undefined;
     [SCREENS.CUSTOM_RECIPES_ROOT]: undefined;
-    [SCREENS.RECIPE_EDITOR]: {
-        scope: 'edit',
-        recipe: Recipe,
-    } | {
-        scope: 'new'
-    },
+    [SCREENS.RECIPE_EDITOR]:
+        | {
+              scope: 'edit';
+              recipe: Recipe;
+          }
+        | {
+              scope: 'new';
+          };
+    [SCREENS.INGREDIENT_EDITOR]: {
+        ingredient: MeasuredIngredient,
+    }
+    [SCREENS.RECIPE_IMPORTER]: undefined;
 };

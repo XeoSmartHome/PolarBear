@@ -1,6 +1,6 @@
-import React, { useCallback } from "react";
+import React, { useCallback } from 'react';
 import { Card, Chip, Text } from "react-native-paper";
-import { Ingredient, Recipe, Tag } from "types";
+import { Ingredient, Recipe } from "types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SCREENS } from "navigation/SCREENS";
 import { RouteNavigationParams } from "navigation/types";
@@ -8,8 +8,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 interface RecipeListItemProps {
     recipe: Recipe;
-    navigation: StackNavigationProp<RouteNavigationParams>;
+    navigation?: StackNavigationProp<RouteNavigationParams>;
     addIngredient?: (newIngredient: Ingredient) => void;
+    onPress?: (recipe: Recipe) => void;
+    onLongPress?: (recipe: Recipe) => void;
 }
 
 interface RecipeTagProps {
@@ -33,14 +35,22 @@ const RecipeIngredient = ({ ingredient, addIngredient }: RecipeTagProps) => {
     );
 };
 
-const RecipeListItem = ({ recipe, navigation, addIngredient }: RecipeListItemProps) => {
+const RecipeListItem = ({ recipe, navigation, addIngredient, onPress, onLongPress }: RecipeListItemProps) => {
 
-    const goToRecipeDetails = useCallback(() => {
-        navigation.navigate(SCREENS.RECIPE_DETAILS, { recipe });
-    }, []);
+    const _onPress = useCallback(() => {
+        if(onPress){
+            onPress?.(recipe);
+        } else  {
+            navigation?.navigate(SCREENS.RECIPE_DETAILS, { recipe });
+        }
+    }, [onPress, recipe]);
+
+    const _onLongPress = useCallback(() => {
+        onLongPress?.(recipe);
+    }, [onLongPress, recipe])
 
     return (
-        <TouchableOpacity style={styles.touchableOpacity} onPress={goToRecipeDetails}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={_onPress} onLongPress={_onLongPress}>
             <Card style={styles.card}>
                 <Card.Title title={recipe.name} titleVariant={"titleLarge"} titleNumberOfLines={2} />
                 <Card.Content>
