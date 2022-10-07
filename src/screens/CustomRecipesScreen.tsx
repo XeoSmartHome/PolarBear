@@ -1,10 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-    FlatList,
-    ListRenderItemInfo,
-    StyleSheet,
-    View,
-} from 'react-native';
+import { FlatList, ListRenderItemInfo, StyleSheet, View } from 'react-native';
 import { useScreenHeader } from 'navigation/hooks';
 import { FAB } from 'react-native-paper';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -33,7 +28,10 @@ const CustomRecipesScreen = ({}: CustomRecipesScreenProps) => {
                 <RecipeListItem
                     recipe={recipe}
                     onPress={recipe => {
-                        navigation.navigate(SCREENS.RECIPE_DETAILS, { recipe });
+                        navigation.navigate(SCREENS.RECIPE_DETAILS, {
+                            recipe,
+                            isCustom: true,
+                        });
                     }}
                     onLongPress={recipe => {
                         navigation.navigate(SCREENS.RECIPE_EDITOR, {

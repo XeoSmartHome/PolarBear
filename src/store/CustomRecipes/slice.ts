@@ -24,7 +24,7 @@ const customRecipesSlice = createSlice({
             );
         },
         updateRecipe: (state, action: PayloadAction<Recipe>) => {
-            state.recipes.map(recipe =>
+            state.recipes = state.recipes.map(recipe =>
                 recipe.id === action.payload.id ? action.payload : recipe,
             );
         },

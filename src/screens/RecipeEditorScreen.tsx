@@ -7,12 +7,13 @@ import { SCREENS } from 'navigation/SCREENS';
 import XTextInput from 'components/Common/XTextInput';
 import { useForm } from 'react-hook-form';
 import { Button, Divider, Surface } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { customRecipesActions } from 'store/CustomRecipes/slice';
 import { MeasuredIngredient } from 'types';
 import RecipeIngredientsListItem from 'components/Recipe/RecipeIngredientsListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
 import XCard from 'components/Common/XCard';
+import { selectCustomRecipeById } from 'store/CustomRecipes/selectors';
 
 type RecipeEditorScreenProps = {
     navigation: StackNavigationProp<
@@ -32,34 +33,38 @@ const RecipeEditorScreen = ({
     navigation,
 }: RecipeEditorScreenProps) => {
     const dispatch = useDispatch();
-    const [ingredients, setIngredients] = useState<MeasuredIngredient[]>([
-        { id: '1', label: 'asd', quantity: 100 },
-    ]);
+    const recipe = useSelector(selectCustomRecipeById(params?.recipeId));
+    const [ingredients, setIngredients] = useState<MeasuredIngredient[]>(
+        params.scope === 'new' ? [] : recipe?.ingredients || [],
+    );
 
     const { control, handleSubmit, getValues, setFocus } = useForm({
         defaultValues: {
-            [RECIPE_FIELDS.NAME]: '',
-            [RECIPE_FIELDS.DESCRIPTION]: '',
+            [RECIPE_FIELDS.NAME]: params.scope === 'edit' && recipe ? recipe.name : '',
+            [RECIPE_FIELDS.DESCRIPTION]:
+                params.scope === 'edit' && recipe ? recipe.description : '',
         },
     });
 
     const openAddIngredientModal = useCallback(() => {}, []);
 
     const createOrUpdateRecipe = useCallback(() => {
-        const { name } = getValues();
-        dispatch(
-            customRecipesActions.addRecipe({
-                id: `${Math.random()}`,
-                name,
-                description: name,
-                ingredients: [],
-                tags: [],
-            }),
-        );
-    }, []);
+        const { name, description } = getValues();
+        if (params.scope === 'edit' && recipe !== undefined) {
+            dispatch(
+                customRecipesActions.updateRecipe({
+                    ...recipe,
+                    name,
+                    description,
+                    ingredients,
+                }),
+            );
+            navigation.goBack();
+        }
+    }, [ingredients]);
 
     useScreenHeader({
-        title: params.scope === 'new' ? 'New recipe' : params.recipe.name,
+        title: params.scope === 'new' ? 'New recipe' : recipe?.name,
         headerRight: props => (
             <Button mode={'text'} onPress={handleSubmit(createOrUpdateRecipe)}>
                 SAVE
@@ -118,7 +123,7 @@ const RecipeEditorScreen = ({
                     numberOfLines={10}
                     autoCapitalize={'sentences'}
                 />
-                <Divider/>
+                <Divider />
                 {ingredients.map(renderIngredient)}
                 <Button
                     mode={'text'}

@@ -10,7 +10,9 @@ import { useScreenHeader } from 'navigation/hooks';
 import { MeasuredIngredient } from 'types';
 import BluetoothManager from '../bluetooth/BluetoothManager';
 import { jumpTo } from 'store/BottomTabNavigator/slice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import XCard from 'components/Common/XCard';
+import { selectCustomRecipeById } from 'store/CustomRecipes/selectors';
 
 interface RecipeIngredientProps {
     ingredient: MeasuredIngredient;
@@ -48,10 +50,11 @@ interface RecipeDetailsScreenProps {
 
 const RecipeDetailsScreen = ({
     route: {
-        params: { recipe },
+        params: { recipe: r, isCustom },
     },
     navigation,
 }: RecipeDetailsScreenProps) => {
+    const recipe = useSelector(selectCustomRecipeById(r.id));
     const [favorite, setFavorite] = useState(false);
 
     const addOrRemoveFromFavorites = useCallback(() => {
@@ -60,7 +63,7 @@ const RecipeDetailsScreen = ({
 
     useScreenHeader(
         {
-            headerTitle: recipe.name,
+            headerTitle: recipe?.name,
             headerRight: props => (
                 <IconButton
                     icon={favorite ? 'star' : 'star-outline'}
@@ -75,8 +78,10 @@ const RecipeDetailsScreen = ({
     const dispatch = useDispatch();
 
     const startRecipe = useCallback(() => {
-        BluetoothManager.startRecipe(recipe);
-        dispatch(jumpTo(2));
+        if (recipe) {
+            BluetoothManager.startRecipe(recipe);
+        }
+        navigation.popToTop();
     }, [recipe]);
 
     const renderIngredient = useCallback(
@@ -92,18 +97,35 @@ const RecipeDetailsScreen = ({
         [navigation],
     );
 
+    const goToRecipeEditorScreen = useCallback(() => {
+        if (recipe) {
+            navigation.navigate(SCREENS.RECIPE_EDITOR, {
+                scope: 'edit',
+                recipeId: recipe.id,
+            });
+        }
+    }, []);
+
     return (
         <ScrollView contentContainerStyle={styles.contentContainer}>
-            <Surface style={{ borderRadius: 20, padding: 12 }}>
+            <XCard>
+                {isCustom && (
+                    <IconButton
+                        mode={'contained'}
+                        icon={'pencil'}
+                        style={styles.editButton}
+                        onPress={goToRecipeEditorScreen}
+                    />
+                )}
                 <MaterialCommunityIcons
                     name={'glass-cocktail'}
-                    size={200}
+                    size={120}
                     style={styles.icon}
                     color={'white'}
                 />
-                <Text numberOfLines={3}>{`${'\t'}` + recipe.description}</Text>
+                <Text numberOfLines={3}>{`${'\t'}` + recipe?.description}</Text>
                 <View style={styles.ingredients}>
-                    {recipe.ingredients.map(renderIngredient)}
+                    {recipe?.ingredients.map(renderIngredient)}
                 </View>
                 <Button
                     mode={'contained'}
@@ -111,7 +133,7 @@ const RecipeDetailsScreen = ({
                     onPress={startRecipe}>
                     Start recipe
                 </Button>
-            </Surface>
+            </XCard>
         </ScrollView>
     );
 };
@@ -124,7 +146,7 @@ const styles = StyleSheet.create({
     },
     icon: {
         alignSelf: 'center',
-        marginVertical: 20,
+        marginBottom: 8,
     },
     ingredients: {
         marginTop: 16,
@@ -133,6 +155,9 @@ const styles = StyleSheet.create({
         width: '80%',
         alignSelf: 'center',
         marginVertical: 20,
+    },
+    editButton: {
+        alignSelf: 'flex-end',
     },
 });
 
