@@ -6,15 +6,19 @@ import { RouteNavigationParams } from 'navigation/types';
 import { SCREENS } from 'navigation/SCREENS';
 import XTextInput from 'components/Common/XTextInput';
 import { useForm } from 'react-hook-form';
-import { Button, Surface } from 'react-native-paper';
+import { Button, Divider, Surface } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { customRecipesActions } from 'store/CustomRecipes/slice';
 import { MeasuredIngredient } from 'types';
 import RecipeIngredientsListItem from 'components/Recipe/RecipeIngredientsListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
+import XCard from 'components/Common/XCard';
 
 type RecipeEditorScreenProps = {
-    navigation: StackNavigationProp<RouteNavigationParams, SCREENS.RECIPE_EDITOR>
+    navigation: StackNavigationProp<
+        RouteNavigationParams,
+        SCREENS.RECIPE_EDITOR
+    >;
     route: RouteProp<RouteNavigationParams, SCREENS.RECIPE_EDITOR>;
 };
 
@@ -23,7 +27,10 @@ enum RECIPE_FIELDS {
     DESCRIPTION = 'description',
 }
 
-const RecipeEditorScreen = ({ route: { params }, navigation }: RecipeEditorScreenProps) => {
+const RecipeEditorScreen = ({
+    route: { params },
+    navigation,
+}: RecipeEditorScreenProps) => {
     const dispatch = useDispatch();
     const [ingredients, setIngredients] = useState<MeasuredIngredient[]>([
         { id: '1', label: 'asd', quantity: 100 },
@@ -63,19 +70,28 @@ const RecipeEditorScreen = ({ route: { params }, navigation }: RecipeEditorScree
         },
     });
 
-    const goToIngredientEditorScreen = useCallback((ingredient: MeasuredIngredient) => {
-        navigation.navigate(SCREENS.INGREDIENT_EDITOR, {ingredient});
-    }, []);
+    const goToIngredientEditorScreen = useCallback(
+        (ingredient: MeasuredIngredient) => {
+            navigation.navigate(SCREENS.INGREDIENT_EDITOR, { ingredient });
+        },
+        [],
+    );
 
-    const renderIngredient = useCallback((ingredient: MeasuredIngredient) => {
-        return (
-            <RecipeIngredientsListItem
-                ingredient={ingredient}
-                key={`ingredient-${ingredient.id}`}
-                onEditPress={goToIngredientEditorScreen}
-            />
-        );
-    }, [goToIngredientEditorScreen]);
+    const renderIngredient = useCallback(
+        (ingredient: MeasuredIngredient) => {
+            return (
+                <>
+                    <RecipeIngredientsListItem
+                        ingredient={ingredient}
+                        key={`ingredient-${ingredient.id}`}
+                        onEditPress={goToIngredientEditorScreen}
+                    />
+                    <Divider />
+                </>
+            );
+        },
+        [goToIngredientEditorScreen],
+    );
 
     const focusDescription = useCallback(() => {
         setFocus(RECIPE_FIELDS.DESCRIPTION);
@@ -85,7 +101,7 @@ const RecipeEditorScreen = ({ route: { params }, navigation }: RecipeEditorScree
         <ScrollView
             contentContainerStyle={styles.contentContainer}
             keyboardShouldPersistTaps={'handled'}>
-            <Surface style={styles.card}>
+            <XCard>
                 <XTextInput
                     control={control}
                     name={RECIPE_FIELDS.NAME}
@@ -102,11 +118,15 @@ const RecipeEditorScreen = ({ route: { params }, navigation }: RecipeEditorScree
                     numberOfLines={10}
                     autoCapitalize={'sentences'}
                 />
+                <Divider/>
                 {ingredients.map(renderIngredient)}
-                <Button mode={'text'} onPress={openAddIngredientModal}>
+                <Button
+                    mode={'text'}
+                    onPress={openAddIngredientModal}
+                    style={styles.addIngredientButton}>
                     ADD INGREDIENT
                 </Button>
-            </Surface>
+            </XCard>
         </ScrollView>
     );
 };
@@ -117,9 +137,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 16,
     },
-    card: {
-        padding: 16,
-        borderRadius: 16,
+    addIngredientButton: {
+        marginTop: 16,
     },
 });
 
