@@ -4,15 +4,15 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RouteNavigationParams } from 'navigation/types';
 import { SCREENS } from 'navigation/SCREENS';
-import { Button, IconButton, List, Surface, Text } from 'react-native-paper';
+import { Button, IconButton, List, Text } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useScreenHeader } from 'navigation/hooks';
 import { MeasuredIngredient } from 'types';
 import BluetoothManager from '../bluetooth/BluetoothManager';
-import { jumpTo } from 'store/BottomTabNavigator/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import XCard from 'components/Common/XCard';
 import { selectCustomRecipeById } from 'store/CustomRecipes/selectors';
+import { selectRecipeById } from 'store/Recipes/selectors';
 
 interface RecipeIngredientProps {
     ingredient: MeasuredIngredient;
@@ -54,7 +54,7 @@ const RecipeDetailsScreen = ({
     },
     navigation,
 }: RecipeDetailsScreenProps) => {
-    const recipe = useSelector(selectCustomRecipeById(r.id));
+    const recipe = useSelector(isCustom ? selectCustomRecipeById(r.id) : selectRecipeById(r.id));
     const [favorite, setFavorite] = useState(false);
 
     const addOrRemoveFromFavorites = useCallback(() => {
